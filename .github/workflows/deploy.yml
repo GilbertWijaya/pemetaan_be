@@ -1,0 +1,153 @@
+name: 🚀 Deploy & Notify
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+  workflow_dispatch:
+  release:
+    types: [published, edited]
+  issues:
+    types: [opened, reopened]
+  issue_comment:
+    types: [created]
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  notify-discord:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set common environment variables
+        run: |
+          echo "REPO_NAME=${GITHUB_REPOSITORY}" >> $GITHUB_ENV
+          echo "ACTOR=${GITHUB_ACTOR}" >> $GITHUB_ENV
+          echo "EVENT_NAME=${GITHUB_EVENT_NAME}" >> $GITHUB_ENV
+          echo "RUN_URL=https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" >> $GITHUB_ENV
+          echo "TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_ENV
+
+          if [ "$GITHUB_EVENT_NAME" != "issues" ] && [ "$GITHUB_EVENT_NAME" != "issue_comment" ]; then
+            echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
+            echo "COMMIT_SHA=$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_ENV
+            echo "COMMIT_URL=https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}" >> $GITHUB_ENV
+          fi
+
+      - name: Set notification style based on event
+        run: |
+          case "$GITHUB_EVENT_NAME" in
+            push)
+              echo "TITLE=⬆️ Code Pushed" >> $GITHUB_ENV
+              echo "COLOR=3447003" >> $GITHUB_ENV
+              echo "DESCRIPTION=New commits have been pushed to the repository." >> $GITHUB_ENV
+              ;;
+            pull_request)
+              echo "TITLE=🔀 Pull Request Activity" >> $GITHUB_ENV
+              echo "COLOR=16776960" >> $GITHUB_ENV
+              echo "DESCRIPTION=A pull request requires attention." >> $GITHUB_ENV
+              ;;
+            release)
+              echo "TITLE=🏷️ Release Update" >> $GITHUB_ENV
+              echo "COLOR=10181046" >> $GITHUB_ENV
+              echo "DESCRIPTION=A release has been published or updated." >> $GITHUB_ENV
+              ;;
+            workflow_dispatch)
+              echo "TITLE=▶️ Manual Workflow Triggered" >> $GITHUB_ENV
+              echo "COLOR=3066993" >> $GITHUB_ENV
+              echo "DESCRIPTION=Workflow manually triggered by a user." >> $GITHUB_ENV
+              ;;
+            schedule)
+              echo "TITLE=⏰ Scheduled Automation" >> $GITHUB_ENV
+              echo "COLOR=9807270" >> $GITHUB_ENV
+              echo "DESCRIPTION=Scheduled job executed automatically." >> $GITHUB_ENV
+              ;;
+            issues)
+              echo "TITLE=🐞 New Issue / Complaint" >> $GITHUB_ENV
+              echo "COLOR=15158332" >> $GITHUB_ENV
+              echo "DESCRIPTION=A new issue or complaint has been reported." >> $GITHUB_ENV
+              echo "ISSUE_TITLE=$(jq -r .issue.title "$GITHUB_EVENT_PATH")" >> $GITHUB_ENV
+              echo "ISSUE_URL=$(jq -r .issue.html_url "$GITHUB_EVENT_PATH")" >> $GITHUB_ENV
+              ;;
+            issue_comment)
+              echo "TITLE=💬 Issue Comment Added" >> $GITHUB_ENV
+              echo "COLOR=15844367" >> $GITHUB_ENV
+              echo "DESCRIPTION=A new comment has been added to an issue." >> $GITHUB_ENV
+              echo "ISSUE_TITLE=$(jq -r .issue.title "$GITHUB_EVENT_PATH")" >> $GITHUB_ENV
+              echo "ISSUE_URL=$(jq -r .issue.html_url "$GITHUB_EVENT_PATH")" >> $GITHUB_ENV
+              ;;
+            *)
+              echo "TITLE=🚀 Workflow Triggered" >> $GITHUB_ENV
+              echo "COLOR=3447003" >> $GITHUB_ENV
+              echo "DESCRIPTION=A workflow event has occurred." >> $GITHUB_ENV
+              ;;
+          esac
+
+      - name: Send Discord notification
+        run: |
+          payload=$(cat <<EOF
+          {
+            "username": "Gilbert Deployment Notifier",
+            "avatar_url": "https://awpbjuuervegpfdunuui.supabase.co/storage/v1/object/public/images/produk/spam_jomok.jpg",
+            "embeds": [
+              {
+                "title": "$TITLE",
+                "description": "$DESCRIPTION",
+                "color": $COLOR,
+                "thumbnail": {
+                   "url": "https://raw.githubusercontent.com/github/explore/main/topics/devops/devops.png"
+                 },
+                "fields": [
+                  {
+                    "name": "📦 Repository",
+                    "value": "$REPO_NAME",
+                    "inline": false
+                  },
+                  {
+                    "name": "👤 Actor",
+                    "value": "$ACTOR",
+                    "inline": true
+                  },
+                  {
+                    "name": "⚡ Event",
+                    "value": "$EVENT_NAME",
+                    "inline": true
+                  },
+                  {
+                    "name": "🌿 Branch",
+                    "value": "${BRANCH_NAME:-N/A}",
+                    "inline": true
+                  },
+                  {
+                    "name": "🔖 Commit",
+                    "value": "${COMMIT_SHA:-N/A}",
+                    "inline": true
+                  },
+                  {
+                    "name": "🐞 Issue",
+                    "value": "[${ISSUE_TITLE:-N/A}](${ISSUE_URL:-#})",
+                    "inline": false
+                  },
+                  {
+                    "name": "📊 Workflow Run",
+                    "value": "[View Details]($RUN_URL)",
+                    "inline": false
+                  }
+                ],
+                "image": {
+                   "url": "https://raw.githubusercontent.com/github/explore/main/topics/actions/actions.png"
+                 },
+                "footer": {
+                  "text": "GitHub Actions • Smart Event Notification"
+                },
+                "timestamp": "$TIMESTAMP"
+              }
+            ]
+          }
+          EOF
+          )
+
+          curl -s -X POST \
+            -H "Content-Type: application/json" \
+            -d "$payload" \
+            "${{ secrets.DISCORD_WEBHOOK }}"
