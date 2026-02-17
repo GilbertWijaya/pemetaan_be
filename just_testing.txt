@@ -5,3 +5,6 @@ update deskripsi dan is_propose untuk response clean
 bug membuat data baru pada ketika detail di hit
 refcator kode dan response
 fitur check wa active, validasi regex nomor, integrasi data ke csv
+
+endpoint
+1. auth

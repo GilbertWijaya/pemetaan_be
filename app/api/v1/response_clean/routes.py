@@ -67,7 +67,7 @@ def update_by_id(id):
 
         description = data.get("description")
         is_wa_active = data.get("is_wa_active") or 'checking'
-        propose_status = data.get("is_wa_active")
+        propose_status = data.get("is_propose")
 
         if description is None or propose_status is None:
             return error_response("description, is_propose or is_wa_active are required", 400)
@@ -125,7 +125,7 @@ def update_by_place_id(place_id):
 
         description = data.get("description")
         is_wa_active = data.get("is_wa_active") or 'checking'
-        propose_status = data.get("is_wa_active")
+        propose_status = data.get("is_propose")
 
         if description is None or propose_status is None:
             return error_response("description, is_propose or is_wa_active are required", 400)

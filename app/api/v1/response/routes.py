@@ -9,12 +9,15 @@ from app.utils.response import success_response, error_response
 from app.services.google_api_service import GoogleApiService
 from app.services.response_clean_service import ResponseCleanService
 
+from app.middlewares.admin_required import admin_required
+
 bp = Blueprint("api_v1_response", __name__, url_prefix="/api/v1/response")
 
 response_schema = ResponseCreateSchema()
 
 @bp.route("/create", methods=["POST"])
 @jwt_required()
+@admin_required
 def create():
     try:
         data = request.get_json()
@@ -28,12 +31,14 @@ def create():
 
             google_response = GoogleApiService.get_all_places(prompt)
 
+            # simpan ke model response dulu
             saved = ResponseService.create(
                 prompt=prompt,
                 response_data=google_response,
                 response_status="all"
             )
 
+            # proses data yang disimpan ke service ke dalam service response_clean untuk pecah
             ResponseCleanService.process_from_response_model(
                 response_model=saved,
                 response_status="all",
@@ -89,7 +94,7 @@ def create():
     except Exception as err:
         return error_response(str(err), 500)
 
-# ✅ GET ALL (hanya milik user login)
+# ✅ GET ALL
 @bp.route("/all", methods=["GET"])
 @jwt_required()
 def all_response():
@@ -108,11 +113,11 @@ def all_response():
         return error_response(str(err), 500)
 
 # ✅ DETAIL
-@bp.route("/detail/<string:response_id>", methods=["GET"])
+@bp.route("/detail/<string:id>", methods=["GET"])
 @jwt_required()
-def detail_by_response_id(response_id):
+def detail_by_id(id):
     try:
-        response = ResponseService.get_by_id(response_id)
+        response = ResponseService.get_by_id(id)
 
         if not response:
             return error_response("Response not found", 404)
@@ -187,11 +192,11 @@ def get_by_prompt():
         return error_response(str(err), 500)
 
 # ✅ DELETE
-@bp.route("/delete/<string:response_id>", methods=["DELETE"])
+@bp.route("/delete/<string:id>", methods=["DELETE"])
 @jwt_required()
-def delete(response_id):
+def delete(id):
     try:
-        response = ResponseService.delete(response_id)
+        response = ResponseService.delete(id)
 
         if not response:
             return error_response("Response not found", 404)
