@@ -5,7 +5,6 @@ from app.extensions import db
 
 class ResponseService:
 
-
     @staticmethod
     def create(prompt: str, response_data: dict, parent_id: str = None, response_status: str= "all"):
         current_user_id = get_jwt_identity()

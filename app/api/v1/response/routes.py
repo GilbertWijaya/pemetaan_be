@@ -23,18 +23,10 @@ def create():
         place_id = data.get("place_id")
         parent_id = data.get("parent_id")
 
-        # ============================
         # MODE SEARCH (Keyword)
-        # ============================
         if prompt and not place_id:
 
             google_response = GoogleApiService.get_all_places(prompt)
-
-            # saved = ResponseService.create(
-            #     prompt=prompt,
-            #     response_data=google_response,
-            #     response_status="all"
-            # )   
 
             saved = ResponseService.create(
                 prompt=prompt,
@@ -53,19 +45,11 @@ def create():
                 message="Places fetched and stored successfully"
             )
 
-        # ============================
         # MODE DETAIL (Place ID)
-        # ============================
         elif place_id and parent_id:
 
             google_response = GoogleApiService.get_detail_place(place_id, fields=["formatted_phone_number","website"])
 
-            # saved = ResponseService.create(
-            #     prompt=place_id,
-            #     response_data=google_response,
-            #     parent_id=parent_id,
-            #     response_status="detail"
-            # )
             saved = ResponseService.create(
                 prompt=place_id,
                 response_data=google_response,
@@ -104,7 +88,6 @@ def create():
 
     except Exception as err:
         return error_response(str(err), 500)
-
 
 # ✅ GET ALL (hanya milik user login)
 @bp.route("/all", methods=["GET"])

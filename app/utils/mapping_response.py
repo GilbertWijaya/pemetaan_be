@@ -2118,9 +2118,7 @@ def map_data(
 
     results_list = []
 
-    # ===============================
     # MODE DETAIL
-    # ===============================
     if detail:
         if "result" in data:
             place = data["result"]
@@ -2133,9 +2131,7 @@ def map_data(
 
             results_list.append(mapped)
 
-    # ===============================
     # MODE SEARCH
-    # ===============================
     else:
         if "results" in data:
 
