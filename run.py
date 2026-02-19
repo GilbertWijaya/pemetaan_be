@@ -24,9 +24,9 @@ def create_app():
 
 app = create_app()
 
-with app.app_context():
-    db.engine.connect()
-    print("Database connected!")
+# with app.app_context():
+#     db.engine.connect()
+#     print("Database connected!")
 
 if __name__ == "__main__":
     app.run(debug=True)
