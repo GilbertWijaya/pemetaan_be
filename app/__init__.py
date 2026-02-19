@@ -33,7 +33,7 @@ def create_app():
         (api_v1_user, "/api/v1/user"),
         (api_v1_response, "/api/v1/response"),
         (api_v1_response_clean, "/api/v1/response_clean"),
-        (api_v1_health, "/api/v1/health")
+        (api_v1_health, "/")
     ]: app.register_blueprint(bp, url_prefix=prefix)
 
     return app
