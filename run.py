@@ -1,5 +1,5 @@
 from flask import Flask
-from app.extensions import db, migrate, jwt
+# from app.extensions import db, migrate, jwt
 from app.config import Config
 from flask_jwt_extended import JWTManager
 from app.middlewares.error_handler import error_handlers
