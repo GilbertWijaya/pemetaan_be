@@ -5,6 +5,7 @@ from .api.v1.auth.routes import bp as api_v1_auth
 from .api.v1.user.routes import bp as api_v1_user
 from .api.v1.response.routes import bp as api_v1_response
 from .api.v1.response_clean.routes import bp as api_v1_response_clean
+from .api.v1.health import bp as api_v1_health
 
 def create_app():
     app = Flask(__name__)
@@ -20,5 +21,6 @@ def create_app():
     app.register_blueprint(api_v1_user)
     app.register_blueprint(api_v1_response)
     app.register_blueprint(api_v1_response_clean)
+    app.register_blueprint(api_v1_health)
 
     return app
