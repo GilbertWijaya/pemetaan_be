@@ -1,11 +1,11 @@
+import os, sys
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 from flask import Flask
 # from app.extensions import db, migrate, jwt
 from app.config import Config
 from flask_jwt_extended import JWTManager
 from app.middlewares.error_handler import error_handlers
 from app import create_app
-import os, sys
-sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 # jwt = JWTManager()
 
