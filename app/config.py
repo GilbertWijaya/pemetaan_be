@@ -8,7 +8,16 @@ class Config:
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
     JWT_SECRET_EXPIRED = os.getenv("JWT_SECRET_EXPIRED")
 
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
+    # Ambil URL
+    _db_url = os.getenv("DATABASE_URL")
+    
+    # Logika perbaikan: jika ada 'postgres://', ganti jadi 'postgresql://'
+    if _db_url and _db_url.startswith("postgres://"):
+        _db_url = _db_url.replace("postgres://", "postgresql://", 1)
+    
+    SQLALCHEMY_DATABASE_URI = _db_url
+
+    # SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
     SQLALCHEMY_DATABASE_USER = os.getenv("DB_USER")
     SQLALCHEMY_DATABASE_PASSWORD = os.getenv("DB_PASSWORD")
     SQLALCHEMY_DATABASE_HOST = os.getenv("DB_HOST")
