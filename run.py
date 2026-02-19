@@ -3,7 +3,7 @@ from app.extensions import db, migrate, jwt
 from app.config import Config
 from flask_jwt_extended import JWTManager
 from app.middlewares.error_handler import error_handlers
-from .app import create_app
+from app import create_app
 
 # jwt = JWTManager()
 
