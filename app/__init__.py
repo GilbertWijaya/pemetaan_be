@@ -1,11 +1,11 @@
 from flask import Flask
-from app.config import Config
-from app.extensions import db, migrate, jwt
-from app.api.v1.auth.routes import bp as api_v1_auth
-from app.api.v1.user.routes import bp as api_v1_user
-from app.api.v1.response.routes import bp as api_v1_response
-from app.api.v1.response_clean.routes import bp as api_v1_response_clean
-from app.api.v1.health import bp as api_v1_health
+from .config import Config
+from .extensions import db, migrate, jwt
+from .api.v1.auth.routes import bp as api_v1_auth
+from .api.v1.user.routes import bp as api_v1_user
+from .api.v1.response.routes import bp as api_v1_response
+from .api.v1.response_clean.routes import bp as api_v1_response_clean
+from .api.v1.health import bp as api_v1_health
 from flask_jwt_extended import JWTManager
 
 jwt = JWTManager()
