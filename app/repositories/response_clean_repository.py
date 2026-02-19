@@ -27,7 +27,7 @@ class ResponseCleanRepository:
 
     @staticmethod
     def get_by_place_id(place_id: str):
-        return ResponseClean.query.filter_by(place_id=place_id)
+        return ResponseClean.query.filter_by(place_id=place_id).first()
 
     @staticmethod
     def get_by_place_and_response(place_id: str, response_id: str) -> Optional[ResponseClean]: #by response_id(uuid) in response model
