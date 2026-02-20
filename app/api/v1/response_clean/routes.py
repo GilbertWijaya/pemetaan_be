@@ -195,12 +195,12 @@ def delete_by_place_id(place_id: str):
     except Exception as err:
         return error_response(str(err), 500)
 
-@bp.route("/detail/<string:place_id>/<string:response_id>", methods=["PUT"]) #by response_id(uuid) ini response model
+@bp.route("/detail/<string:place_id>", methods=["PUT"]) #by response_id(uuid) ini response model
 @jwt_required()
 def update_detail(place_id, response_id):
     data = ResponseCleanService.update_from_google_detail(
         place_id=place_id,
-        response_id=response_id
+        # response_id=response_id
     )
 
     return success_response(

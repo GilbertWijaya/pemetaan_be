@@ -107,13 +107,13 @@ class ResponseCleanService:
         return cleaned_records
 
     @staticmethod
-    def update_from_google_detail(place_id: str, response_id: str):
+    def update_from_google_detail(place_id: str):
 
         if not place_id:
             raise ValueError("place_id is required")
 
-        if not response_id:
-            raise ValueError("response_id is required")
+        # if not response_id:
+        #     raise ValueError("response_id is required")
 
         # Ambil data dari database
         # existing = ResponseCleanRepository.get_by_place_and_response(
