@@ -35,7 +35,7 @@ class ResponseClean(db.Model, AuditMixin):
     response_id = db.Column(
         UUID(as_uuid=True),
         db.ForeignKey("responses.id"),
-        nullable=False
+        nullable=True
     )
 
     # 🔗 Relasi ke User

@@ -116,9 +116,12 @@ class ResponseCleanService:
             raise ValueError("response_id is required")
 
         # Ambil data dari database
-        existing = ResponseCleanRepository.get_by_place_and_response(
+        # existing = ResponseCleanRepository.get_by_place_and_response(
+        #     place_id=place_id,
+        #     response_id=response_id
+        # )
+        existing = ResponseCleanRepository.get_by_place_id(
             place_id=place_id,
-            response_id=response_id
         )
 
         if not existing:
