@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from sqlalchemy.pool import NullPool
 
 load_dotenv()
 
@@ -16,6 +17,20 @@ class Config:
         _db_url = _db_url.replace("postgres://", "postgresql://", 1)
     
     SQLALCHEMY_DATABASE_URI = _db_url
+
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "poolclass": NullPool,
+        "pool_pre_ping": True,
+        "pool_recycle": 280,
+        "connect_args": {
+            "sslmode": "require",
+            "connect_timeout": 10,
+            "keepalives": 1,
+            "keepalives_idle": 30,
+            "keepalives_interval": 10,
+            "keepalives_count": 5,
+        }
+    }
 
     # SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
     SQLALCHEMY_DATABASE_USER = os.getenv("DB_USER")
