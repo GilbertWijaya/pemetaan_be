@@ -223,7 +223,7 @@ class ResponseCleanService:
         return ResponseCleanRepository.get_by_id(id)
     
     @staticmethod
-    def update_description_and_status(id: str, description: str, propose_status: str, is_wa_active: str = 'checking'): 
+    def update_description_and_status(id: str, description: str, propose_status: str, is_wa_active: str ): 
 
         user_id = get_jwt_identity()
 
@@ -258,7 +258,7 @@ class ResponseCleanService:
         return clean
 
     @staticmethod
-    def update_description_and_status(place_id: str, description: str, propose_status: str,  is_wa_active: str = 'checking'):
+    def update_description_and_status(place_id: str, description: str, propose_status: str,  is_wa_active: str):
 
         user_id = get_jwt_identity()
 
@@ -270,7 +270,7 @@ class ResponseCleanService:
         if not clean:
             raise ValueError("ResponseClean not found")
 
-        clean = clean.first()
+        # clean = clean.first()
 
         # if str(clean.user_id) != str(user_id):
         #     raise PermissionError("Forbidden access")

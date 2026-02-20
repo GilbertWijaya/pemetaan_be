@@ -124,7 +124,7 @@ def update_by_place_id(place_id):
         data = request.get_json()
 
         description = data.get("description")
-        is_wa_active = data.get("is_wa_active") or 'checking'
+        is_wa_active = data.get("is_wa_active")
         propose_status = data.get("is_propose")
 
         if description is None or propose_status is None:
