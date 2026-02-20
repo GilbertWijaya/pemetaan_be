@@ -197,11 +197,9 @@ def delete_by_place_id(place_id: str):
 
 @bp.route("/detail/<string:place_id>", methods=["PUT"]) #by response_id(uuid) ini response model
 @jwt_required()
-def update_detail(place_id, response_id):
+def update_detail(place_id):
     data = ResponseCleanService.update_from_google_detail(
-        place_id=place_id,
-        # response_id=response_id
-    )
+        place_id=place_id)
 
     return success_response(
         data=data.to_dict(),
