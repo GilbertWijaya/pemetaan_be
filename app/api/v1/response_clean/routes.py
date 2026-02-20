@@ -172,7 +172,7 @@ def get_by_place_id(place_id):
     except Exception as err:
         return error_response(str(err), 500)
 
-@bp.route("/<string:place_id>", methods=["DELETE"]) #by place in response clean model
+@bp.route("/place/<string:place_id>", methods=["DELETE"]) #by place in response clean model
 @jwt_required()
 def delete_by_place_id(place_id: str):
     try:
