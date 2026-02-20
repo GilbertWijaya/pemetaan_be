@@ -141,7 +141,7 @@ def detail_by_parent_id(parent_id):
         response = ResponseService.get_by_parent_id(parent_id)
 
         if not response:
-            return error_response("Response not found", 404)
+            return error_response("Response not found", 400)
 
         return success_response(
             data=response.to_dict(),
