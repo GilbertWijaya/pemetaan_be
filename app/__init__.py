@@ -20,7 +20,10 @@ def create_app():
     app.config["JWT_SECRET_EXPIRED"] = Config.JWT_SECRET_EXPIRED
 
     # CORS
-    CORS(app, resources={r"/api/v1/*" : {"origins": ["http://localhost:5173", "https://leads-fe-v1.vercel.app"]}})
+    CORS(app, methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+                ,allow_headers=["Content-Type", "Authorization"] 
+                ,supports_credentials=True 
+                ,resources={r"/api/v1/*" : {"origins": ["http://localhost:5173", "https://leads-fe-v1.vercel.app"]}})
 
     # Extensions
     db.init_app(app)
